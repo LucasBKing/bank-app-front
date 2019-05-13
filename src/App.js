@@ -1,24 +1,22 @@
 import React from 'react';
-import logo from './logo.svg';
+import UserRegistration from './components/authentication/UserRegistration';
+import LoginRegistration from './components/authentication/LoginRegistration';
+import BankAccountRegistration from './components/authentication/BankAccountRegistration';
+import Home from './components/Home/Home';
 import './App.css';
+import { Switch, Route } from 'react-router-dom';
+ 
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>App</h1>
+      <Switch>
+        <Route exact path="/" component={Home}/>
+        <Route path="/user_registration" component={UserRegistration} />
+        <Route path="/login_registration" component={LoginRegistration} />
+        <Route path="/bank_account_registration" component={BankAccountRegistration} />
+      </Switch>
     </div>
   );
 }
