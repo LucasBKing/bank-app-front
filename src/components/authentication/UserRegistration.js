@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
-import { TextField, Button } from '@material-ui/core';
+import { Form, Col, Button } from 'react-bootstrap';
 import { registerUser } from '../functions/userFunctions';
 import { withRouter, Redirect } from 'react-router-dom';
+import DateTime from 'react-datetime';
+import "../../../node_modules/react-datetime/css/react-datetime.css";
 
 class UserRegistration extends Component {
     constructor(props) {
@@ -22,8 +24,14 @@ class UserRegistration extends Component {
             adress_id: 1,
             CPF: '',
             user_id: '',
-            navigate: false        
+            navigate: false   
         }
+    }
+
+    handleDate = (date) => {
+        this.setState({
+            birthday: date
+        })
     }
 
     handleChange = (event) => {
@@ -33,7 +41,12 @@ class UserRegistration extends Component {
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        
+
+        let fullDate = this.state.birthday;
+        let day = fullDate._d.getDate();
+        let month = fullDate._d.getMonth()+1;
+        let year = fullDate._d.getFullYear();
+
         // let adress = {
         //     street: this.state.street,
         //     num: this.state.num,
@@ -48,18 +61,17 @@ class UserRegistration extends Component {
             last_name: this.state.last_name,
             email: this.state.email,
             phone: this.state.phone,
-            birthday: this.state.birthday,
+            birthday: day+"/"+month+"/"+year,
             adress_id: 1,
             CPF: this.state.CPF
         }
 
-
+        
         // registerAdress(adress).then(res => {
         //     this.setState({
         //         adress_id: res.insertId
         //     });
         // });
-
         registerUser(user).then(res => {
             this.setState({
                 navigate: true,
@@ -80,109 +92,45 @@ class UserRegistration extends Component {
         return (
             <Fragment>
                 <h1>User Registration</h1>
-                <form onSubmit={this.handleSubmit}>
-                    {/* User */}
-                    <TextField
-                        id="first_name"
-                        label="First name"
-                        value={this.state.first_name}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="last_name"
-                        label="Last name"
-                        value={this.state.last_name}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="email"
-                        label="email"
-                        value={this.state.email}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="phone"
-                        label="phone"
-                        value={this.state.phone}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="birthday"
-                        label="birthday"
-                        value={this.state.birthday}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="CPF"
-                        label="CPF"
-                        value={this.state.CPF}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    {/* Adress */}
-                    {/* <TextField
-                        id="street"
-                        label="Street"
-                        value={this.state.street}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="num"
-                        label="Number"
-                        value={this.state.num}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="neighborhood"
-                        label="Neighborhood"
-                        value={this.state.neighborhood}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="city"
-                        label="City"
-                        value={this.state.city}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="uf"
-                        label="UF"
-                        value={this.state.uf}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    />
-                    <TextField
-                        id="zipcode"
-                        label="Zipcode"
-                        value={this.state.zipcode}
-                        onChange={this.handleChange}
-                        margin="normal"
-                        variant="outlined"
-                    /> */}
-                    <Button type="submit" variant="contained" size="medium" color="primary">
-                        Send 
-                    </Button>
-                </form>
+                <Form onSubmit={this.handleSubmit}>
+                    <Form.Row>
+                        <Form.Group as={Col} controlId="first_name">
+                            <Form.Label>First name</Form.Label>
+                            <Form.Control type="text" placeholder="First name" onChange={this.handleChange} />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="last_name">
+                            <Form.Label>Last name</Form.Label>
+                            <Form.Control type="text" placeholder="Last name" onChange={this.handleChange} />
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Group as={Col} controlId="email">
+                        <Form.Label>Email</Form.Label>
+                        <Form.Control type="email" placeholder="Email" onChange={this.handleChange} />
+                    </Form.Group>
+                    <Form.Row>
+                        <Form.Group as={Col} controlId="phone">
+                            <Form.Label>Phone</Form.Label>
+                            <Form.Control type="text" placeholder="Phone" onChange={this.handleChange} />
+                        </Form.Group>
+
+                        <Form.Group as={Col} controlId="birthday">
+                            <Form.Label>Birthday</Form.Label>
+                            <DateTime dateFormat="DD-MM-YYYY" timeFormat={false} onChange={this.handleDate} />
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
+                        <Form.Group as={Col} controlId="CPF">
+                            <Form.Label>CPF</Form.Label>
+                            <Form.Control type="text" placeholder="CPF" onChange={this.handleChange} />
+                        </Form.Group>
+
+                        <Button type="submit">
+                            Send
+                        </Button>
+                    </Form.Row>
+
+                </Form>
             </Fragment>        
         );
     }

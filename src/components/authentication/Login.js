@@ -3,19 +3,16 @@ import { Form, Col, Button } from 'react-bootstrap';
 import { registerAccountLogin } from '../functions/userFunctions';
 import { withRouter, Redirect } from 'react-router-dom';
 
-class LoginRegistration extends Component {
+class Login extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props);
-
         this.state = {
-            user_id: this.props.location.state.user_id,
-            user_name: this.props.location.state.user_name,
+            user_id: '',
             login_name: '',
             password_login: '',
             navigate: false
-        }        
+        }
     }
 
     handleChange = (event) => {
@@ -33,22 +30,22 @@ class LoginRegistration extends Component {
             user_id: this.state.user_id
         }
 
-        registerAccountLogin(account).then(res => {
-            this.setState({
-                navigate: true
-            });
-        })
+        // registerAccountLogin(account).then(res => {
+        //     this.setState({
+        //         navigate: true
+        //     });
+        // })
     }
 
     render() {
-        const { user_name, navigate } = this.state;
+        const { navigate } = this.state;
         if (navigate === true) return <Redirect to={{
             pathname: '/bank_account_registration',
             state: { user_id: this.state.user_id, user_name: this.state.user_name}
         }}/>;
-        return(
+        return (
             <Fragment>
-                <h1>Olá Sr. {user_name}, crie um login e senha para acessar sua conta online.</h1>
+                <h1>Login</h1>
                 <Form onSubmit={this.handleSubmit}>
                     <Form.Row>
                         <Form.Group as={Col} controlId="login_name">
@@ -66,10 +63,8 @@ class LoginRegistration extends Component {
                     </Form.Row>
                 </Form>
             </Fragment>
-            
-
         );
     }
 }
 
-export default withRouter(LoginRegistration);
+export default Login;

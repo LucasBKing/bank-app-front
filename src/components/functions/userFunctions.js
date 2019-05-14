@@ -57,3 +57,14 @@ export const registerAccountBank = account => {
         });
     
 }
+
+export const getAccountLoginByName = name => {
+    return axios
+        .get('http://localhost:4200/api/login', {
+            login_name: name.login_name          
+        })
+        .then( res => {
+            return res.data;
+        });
+    
+}
