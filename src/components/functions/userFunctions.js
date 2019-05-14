@@ -58,12 +58,16 @@ export const registerAccountBank = account => {
     
 }
 
-export const getAccountLoginByName = name => {
+export const loginAccount = account => {
     return axios
         .get('http://localhost:4200/api/login', {
-            login_name: name.login_name          
+            params: {
+                login_name: account.login_name,
+                password: account.password_login
+            }
         })
         .then( res => {
+            localStorage.setItem('usertoken', res.data.token);
             return res.data;
         });
     

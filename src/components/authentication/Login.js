@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Form, Col, Button } from 'react-bootstrap';
-import { registerAccountLogin } from '../functions/userFunctions';
-import { withRouter, Redirect } from 'react-router-dom';
+import { Form, Col, Button, Modal } from 'react-bootstrap';
+import { loginAccount } from '../functions/userFunctions';
+import { withRouter } from 'react-router-dom';
 
 class Login extends Component {
     constructor(props) {
@@ -10,8 +10,7 @@ class Login extends Component {
         this.state = {
             user_id: '',
             login_name: '',
-            password_login: '',
-            navigate: false
+            password_login: ''
         }
     }
 
@@ -30,6 +29,9 @@ class Login extends Component {
             user_id: this.state.user_id
         }
 
+        loginAccount(account).then( res => {
+            this.props.history.push('/dashboard');
+        })
         // registerAccountLogin(account).then(res => {
         //     this.setState({
         //         navigate: true
@@ -38,33 +40,46 @@ class Login extends Component {
     }
 
     render() {
-        const { navigate } = this.state;
-        if (navigate === true) return <Redirect to={{
-            pathname: '/bank_account_registration',
-            state: { user_id: this.state.user_id, user_name: this.state.user_name}
-        }}/>;
+        const { to, staticContext, ...rest } = this.props;
         return (
             <Fragment>
-                <h1>Login</h1>
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="login_name">
-                            <Form.Label>Login name</Form.Label>
-                            <Form.Control type="text" placeholder="Login name" onChange={this.handleChange} />
-                        </Form.Group>
+                <Modal
+                    {...rest}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Login
+                        </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form onSubmit={this.handleSubmit}>
+                            <Form.Row>
+                                <Form.Group as={Col} controlId="login_name">
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control type="text" placeholder="Login name" onChange={this.handleChange} />
+                                </Form.Group>
 
-                        <Form.Group as={Col} controlId="password_login">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={this.handleChange} />
-                        </Form.Group>
-                        <Button type="submit">
-                            Send
-                        </Button>
-                    </Form.Row>
-                </Form>
+                                <Form.Group as={Col} controlId="password_login">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control type="password" placeholder="Password" onChange={this.handleChange} />
+                                </Form.Group>
+                                <Button type="submit">
+                                    Send
+                                </Button>
+                            </Form.Row>
+                        </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Button onClick={this.props.onHide}>Close</Button>
+                    </Modal.Footer>
+                </Modal>
+                
             </Fragment>
         );
     }
 }
 
-export default Login;
+export default withRouter(Login);
