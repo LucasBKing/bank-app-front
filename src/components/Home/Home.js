@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, ButtonToolbar } from 'react-bootstrap';
+import { Button, ButtonGroup, Container, Row, Col } from 'react-bootstrap';
 import Login from '../authentication/Login';
 
 class Home extends Component {
@@ -9,7 +9,8 @@ class Home extends Component {
         this.state = {
             username: '',
             password: '',
-            modalShow: false
+            modalLoginShow: false,
+            modalSignUpShow: false
         }
     }
 
@@ -20,23 +21,47 @@ class Home extends Component {
     }
 
     render() {
-        let modalClose = () => this.setState({ modalShow: false });
+        let modalLoginClose = () => this.setState({ modalLoginShow: false });
+        let modalSignUpClose = () => this.setState({ modalSignUpShow: false });
 
         return(
             <Fragment>
-                <ButtonToolbar>
-                    <Button
-                        variant="primary"
-                        onClick={() => this.setState({ modalShow: true })}
-                        >
-                        Login
-                    </Button>
-
-                    <Login
-                        show={this.state.modalShow}
-                        onHide={modalClose}
-                    />
-                </ButtonToolbar>
+                <Container>
+                        <Row>
+                            <Col>
+                                <h1 className="text-center">Ekki</h1>
+                            </Col>
+                            
+                        </Row>
+                        <div className="d-flex flex-column">
+                            <ButtonGroup size="lg">
+                                <Button
+                                    variant="primary"
+                                    onClick={() => this.setState({ modalLoginShow: true })}
+                                    >
+                                    Login
+                                </Button>
+                                <Button
+                                    variant="primary"
+                                    onClick={() => this.setState({ modalSignUpShow: true })}
+                                    >
+                                    SignUp
+                                </Button>
+                            </ButtonGroup>
+                            
+                            <Login
+                                show={this.state.modalLoginShow}
+                                onHide={modalLoginClose}
+                            />
+                            <Login
+                                show={this.state.modalSignUpShow}
+                                onHide={modalSignUpClose}
+                            />
+                        
+                        </div>
+ 
+                </Container>
+                
             </Fragment>
         );
     }
