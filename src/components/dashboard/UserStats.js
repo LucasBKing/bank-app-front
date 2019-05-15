@@ -42,10 +42,6 @@ class UserStats extends Component {
                 })
             }
         });
-              //.then( user => {
-        //     
-            
-        // })
     }
     
     render() {

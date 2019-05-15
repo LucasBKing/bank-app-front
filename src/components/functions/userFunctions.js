@@ -128,7 +128,31 @@ export const updateCurrentDebitBalance = (user_id, value) => {
             user_id: user_id,
             value: value
         })
-        .then( res=> {
+        .then( res => {
             return res.data;
         })
+}
+
+export const getListOfUsers = user_id => {
+    return axios
+        .get('http://localhost:4200/api/list_users', {
+            params: {
+                user_id: user_id
+            }
+        })
+        .then(res => { 
+            return res.data 
+        });
+}
+
+export const getListOfPossibleFriends = user_id => {
+    return axios
+        .get('http://localhost:4200/api/list_of_possible_friends', { 
+            params: { 
+                user_id: user_id 
+            } 
+        })
+        .then( res=> { 
+            return res.data 
+        });
 }

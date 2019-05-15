@@ -3,6 +3,7 @@ import { Button, Nav, Navbar } from 'react-bootstrap'
 import jwt_decode from 'jwt-decode';
 import UserStats from './UserStats';
 import DepositModal from './DepositModal';
+import MakeFriendsModal from './MakeFriendsModal';
 
 class Dashboard extends Component {
     constructor(props) {
@@ -11,7 +12,8 @@ class Dashboard extends Component {
         this.state = {
             name: '',
             user_id: null,
-            modalDepositShow: false
+            modalDepositShow: false,
+            modalMakeFriendsShow: false
         }
     }
 
@@ -41,22 +43,14 @@ class Dashboard extends Component {
         this.props.history.push('/');
     }
 
-    handleDeposit = (event) => {
-        
-        console.log("handle deposit")
-    }
-
     handleDoTransaction = (event) => {
         event.preventDefault();
         console.log("handle do transaction")
     }
 
-    handleMakeFriend = (event) => {
-        event.preventDefault();
-        console.log("handle make some friends budyyy")
-    }
     render() {
         let modalDepositClose = () => this.setState({ modalDepositShow: false });
+        let modalMakeFriendsClose = () => this.setState({ modalMakeFriendsShow: false });
 
         let { user_id } = this.state;
         if(user_id === null) {
@@ -87,7 +81,7 @@ class Dashboard extends Component {
                     </Button>
                 </Nav.Item>
                 <Nav.Item>
-                    <Button variant="outline-info" onClick={this.handleMakeFriend}>
+                    <Button variant="outline-info" onClick={() => this.setState({ modalMakeFriendsShow: true })}>
                         Fazer amigos
                     </Button>
                 </Nav.Item>
@@ -96,6 +90,11 @@ class Dashboard extends Component {
                 user_id={this.state.user_id}
                 show={this.state.modalDepositShow}
                 onHide={modalDepositClose}
+            />
+            <MakeFriendsModal
+                user_id={this.state.user_id}
+                show={this.state.modalMakeFriendsShow}
+                onHide={modalMakeFriendsClose}
             />
             </Fragment>
         );
