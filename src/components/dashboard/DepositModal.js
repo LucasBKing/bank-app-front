@@ -46,6 +46,7 @@ class DepositModal extends Component {
 
     render() {
         const { to, staticContext, ...rest } = this.props;
+       
         return (
             <Fragment>
             <Modal
