@@ -26,7 +26,6 @@ class Login extends Component {
         let account = {
             login_name: this.state.login_name,
             password_login: this.state.password_login,
-            user_id: this.state.user_id
         }
 
         loginAccount(account).then( res => {

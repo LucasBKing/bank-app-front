@@ -67,8 +67,41 @@ export const loginAccount = account => {
             }
         })
         .then( res => {
-            localStorage.setItem('usertoken', res.data.token);
+            localStorage.setItem('usertoken', res.data);
             return res.data;
         });
-    
+}
+
+export const getAccountBankById = user_id => {
+    return axios
+        .get('http://localhost:4200/api/account_bank_by_id', {
+            params: {
+                user_id: user_id
+            }
+        })
+        .then( res => {
+            return res.data;;
+        })
+}
+
+export const insertDeposit = (user_id, value) => {
+    return axios
+        .post('http://localhost:4200/api/insert_deposit' , {
+            user_id: user_id,
+            value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
+export const updateCurrentDebitBalance = (user_id, value) => {
+    return axios
+        .post('http://localhost:4200/api/update_debit_balance' , {
+            user_id: user_id,
+            value: value
+        })
+        .then( res=> {
+            return res.data;
+        })
 }

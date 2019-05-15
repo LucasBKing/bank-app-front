@@ -33,6 +33,7 @@ class Home extends Component {
                             </Col>
                             
                         </Row>
+                        
                         <div className="d-flex flex-column">
                             <ButtonGroup size="lg">
                                 <Button
