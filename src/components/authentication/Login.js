@@ -31,11 +31,7 @@ class Login extends Component {
         loginAccount(account).then( res => {
             this.props.history.push('/dashboard');
         })
-        // registerAccountLogin(account).then(res => {
-        //     this.setState({
-        //         navigate: true
-        //     });
-        // })
+
     }
 
     render() {

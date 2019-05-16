@@ -9,8 +9,7 @@ class Home extends Component {
         this.state = {
             username: '',
             password: '',
-            modalLoginShow: false,
-            modalSignUpShow: false
+            modalLoginShow: false
         }
     }
 
@@ -22,7 +21,6 @@ class Home extends Component {
 
     render() {
         let modalLoginClose = () => this.setState({ modalLoginShow: false });
-        let modalSignUpClose = () => this.setState({ modalSignUpShow: false });
 
         return(
             <Fragment>
@@ -44,7 +42,7 @@ class Home extends Component {
                                 </Button>
                                 <Button
                                     variant="primary"
-                                    onClick={() => this.setState({ modalSignUpShow: true })}
+                                    onClick={() => this.props.history.push('/user_registration')}
                                     >
                                     SignUp
                                 </Button>
@@ -53,12 +51,7 @@ class Home extends Component {
                             <Login
                                 show={this.state.modalLoginShow}
                                 onHide={modalLoginClose}
-                            />
-                            <Login
-                                show={this.state.modalSignUpShow}
-                                onHide={modalSignUpClose}
-                            />
-                        
+                            />                        
                         </div>
  
                 </Container>

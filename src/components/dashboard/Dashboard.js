@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Nav, Navbar } from 'react-bootstrap'
+import { Button, Nav, Navbar, Container, Col, Row } from 'react-bootstrap'
 import jwt_decode from 'jwt-decode';
 import UserStats from './UserStats';
 import DepositModal from './DepositModal';
 import MakeFriendsModal from './MakeFriendsModal';
+import ListFriends from './Friends/ListFriends';
 
 class Dashboard extends Component {
     constructor(props) {
@@ -12,6 +13,7 @@ class Dashboard extends Component {
         this.state = {
             name: '',
             user_id: null,
+            login_id: null,
             modalDepositShow: false,
             modalMakeFriendsShow: false
         }
@@ -25,7 +27,8 @@ class Dashboard extends Component {
                 let decoded = jwt_decode(token)
                 this.setState({
                     name: decoded.dataValues.login,
-                    user_id: decoded.dataValues.user_id
+                    user_id: decoded.dataValues.user_id,
+                    login_id: decoded.dataValues.login_id
                 })
             } catch(error) {
                 console.log(error);
@@ -86,12 +89,25 @@ class Dashboard extends Component {
                     </Button>
                 </Nav.Item>
             </Nav>
+            <Container>
+                <Row>
+                    <Col>
+                        <h1>Transactions</h1>
+                    </Col>
+                    <Col>
+                        <h1>List of friends</h1>
+                        <ListFriends id={this.state.login_id}/>
+                    </Col>
+                </Row>
+                
+            </Container>
             <DepositModal
                 user_id={this.state.user_id}
                 show={this.state.modalDepositShow}
                 onHide={modalDepositClose}
             />
             <MakeFriendsModal
+                login_id={this.state.login_id}
                 user_id={this.state.user_id}
                 show={this.state.modalMakeFriendsShow}
                 onHide={modalMakeFriendsClose}
