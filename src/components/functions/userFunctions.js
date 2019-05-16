@@ -75,6 +75,18 @@ export const getAccountCreditCardByAccountBankId = account_bank_id => {
         })
 }
 
+export const getAccountLoginById = user_id => {
+    return axios
+        .get('http://localhost:4200/api/account_login_by_id', {
+            params: {
+                user_id: user_id
+            }
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
 export const getAccountBankById = user_id => {
     return axios
         .get('http://localhost:4200/api/account_bank_by_id', {
@@ -118,6 +130,18 @@ export const updateCurrentDebitBalance = (user_id, value) => {
         .post('http://localhost:4200/api/update_debit_balance' , {
             user_id: user_id,
             value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
+export const updateRequestFriend = (user_id, id, status) => {
+    return axios
+        .post('http://localhost:4200/api/update_request_friend' , {
+            user_id: user_id,
+            id: id,
+            status: status
         })
         .then( res => {
             return res.data;
@@ -172,4 +196,28 @@ export const getUserById = user_id => {
         .then( res=> { 
             return res.data 
         });
+}
+
+export const getFriendsRequests = user_id => {
+    return axios
+        .get('http://localhost:4200/api/get_friends_requests', { 
+            params: { 
+                user_id: user_id
+            } 
+        })
+        .then( res=> { 
+            return res.data 
+        });
+}
+
+export const getStatsUserRequest = account_login_id => {
+    return axios
+        .get('http://localhost:4200/api/get_stats_users_request', { 
+            params: {
+                account_login_id: account_login_id
+            } 
+        })
+        .then( res=> { 
+            return res.data 
+        });  
 }

@@ -42,8 +42,8 @@ class ListFriends extends Component {
                 ?
                 <ListGroup variant="flush">
                 {
-                    list.map(user => {
-                        return <ListGroup.Item>Name: {user.first_name} {user.last_name} Status: {user.status}</ListGroup.Item>
+                    list.map((user, key) => {
+                        return <ListGroup.Item key={key}>Name: {user.first_name} {user.last_name} Status: {user.status}</ListGroup.Item>
                     })
                 }
                 </ListGroup>

@@ -5,6 +5,8 @@ import UserStats from './UserStats';
 import DepositModal from './DepositModal';
 import MakeFriendsModal from './MakeFriendsModal';
 import ListFriends from './Friends/ListFriends';
+import TransactionModal from './Transactions/TransactionModal';
+import { getFriendsRequests } from '../functions/userFunctions';
 
 class Dashboard extends Component {
     constructor(props) {
@@ -14,8 +16,10 @@ class Dashboard extends Component {
             name: '',
             user_id: null,
             login_id: null,
+            friendRequest: false, 
             modalDepositShow: false,
-            modalMakeFriendsShow: false
+            modalMakeFriendsShow: false,
+            modalTransaction: false
         }
     }
 
@@ -30,6 +34,15 @@ class Dashboard extends Component {
                     user_id: decoded.dataValues.user_id,
                     login_id: decoded.dataValues.login_id
                 })
+                getFriendsRequests(decoded.dataValues.user_id).then(res => {
+                    if(res.length > 0) {
+                        this.setState({
+                            friendRequest: true
+                        })
+                        console.log(res);
+                    }
+                })
+                
             } catch(error) {
                 console.log(error);
             }
@@ -54,6 +67,7 @@ class Dashboard extends Component {
     render() {
         let modalDepositClose = () => this.setState({ modalDepositShow: false });
         let modalMakeFriendsClose = () => this.setState({ modalMakeFriendsShow: false });
+        let modalTransactionClose = () => this.setState({ modalTransactionShow: false });
 
         let { user_id } = this.state;
         if(user_id === null) {
@@ -66,6 +80,20 @@ class Dashboard extends Component {
                     <Navbar.Brand href="#home">Ekki</Navbar.Brand>
                 </Nav>
                 <Nav className="ml-auto">
+                    {this.state.friendRequest 
+                    ?
+                        <Button variant="warning" onClick={() => this.props.history.push({
+                                pathname:'/friends_requests',
+                                state: {
+                                    user_id: user_id
+                                }
+                            })}>
+                            You've new requests
+                        </Button>
+                    :
+                        null
+                    }
+                    
                     <Button variant="outline-info" onClick={this.handleLogout}>
                         Logout
                     </Button>
@@ -79,7 +107,7 @@ class Dashboard extends Component {
                     </Button>
                 </Nav.Item>
                 <Nav.Item>
-                    <Button variant="outline-info" onClick={this.handleDoTransaction}>
+                    <Button variant="outline-info" onClick={() => this.setState({ modalTransactionShow: true })}>
                         Efetuar Transferencia
                     </Button>
                 </Nav.Item>
@@ -101,6 +129,11 @@ class Dashboard extends Component {
                 </Row>
                 
             </Container>
+            <TransactionModal
+                login_id={this.state.login_id}
+                show={this.state.modalTransactionShow}
+                onHide={modalTransactionClose}
+            />
             <DepositModal
                 user_id={this.state.user_id}
                 show={this.state.modalDepositShow}
