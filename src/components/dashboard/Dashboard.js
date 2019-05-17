@@ -124,12 +124,13 @@ class Dashboard extends Component {
                     </Col>
                     <Col>
                         <h1>List of friends</h1>
-                        <ListFriends id={this.state.login_id}/>
+                        <ListFriends account_id={this.state.user_id} login_id={this.state.login_id}/>
                     </Col>
                 </Row>
                 
             </Container>
             <TransactionModal
+                user_id={this.state.user_id}
                 login_id={this.state.login_id}
                 show={this.state.modalTransactionShow}
                 onHide={modalTransactionClose}

@@ -110,6 +110,18 @@ export const insertDeposit = (user_id, value) => {
         })
 }
 
+export const insertTransaction = (to_who, account_bank_id, value) => {
+    return axios
+        .post('http://localhost:4200/api/insert_transaction' , {
+            to_who: to_who,
+            account_bank_id: account_bank_id,
+            value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
 export const createCreditCard = credit_card_values => {
     return axios
         .post('http://localhost:4200/api/create_credit_card', {
@@ -125,11 +137,34 @@ export const createCreditCard = credit_card_values => {
         })
 }
 
+export const updateCurrentCreditCardBalance = (credit_card_id, value) => {
+    return axios
+        .post('http://localhost:4200/api/update_credit_card_balance' , {
+            credit_card_id: credit_card_id,
+            value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
 export const updateCurrentDebitBalance = (user_id, value) => {
     return axios
         .post('http://localhost:4200/api/update_debit_balance' , {
             user_id: user_id,
             value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
+export const getCurrentDebitBalance = account_bank_id => {
+    return axios
+        .get('http://localhost:4200/api/get_current_debit_balance' , {
+            params: {
+                account_bank_id: account_bank_id
+            }
         })
         .then( res => {
             return res.data;
@@ -174,11 +209,12 @@ export const getListOfPossibleFriends = user => {
         });
 }
 
-export const getFriendsList = user_id => {
+export const getFriendsList = account => {
     return axios
         .get('http://localhost:4200/api/friends_list', { 
             params: { 
-                user_id: user_id
+                account_to: account.user_id,
+                account_login_id: account.account_login_id
             } 
         })
         .then( res=> { 

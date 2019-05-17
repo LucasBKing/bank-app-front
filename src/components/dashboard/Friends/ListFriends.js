@@ -7,29 +7,34 @@ class ListFriends extends Component {
         super(props);
 
         this.state = {
-            user_id: props.id,
+            user_id: props.account_id,
+            account_login_id: props.account_login_id,
             list: []
         }
     }
 
     componentDidMount() {
+        let account = {
+            user_id: this.state.user_id,
+            
+        }
         getFriendsList(this.state.user_id).then(res => {
             if(res) {
-                res.map(users => {
-                    getUserById(users.account_to).then(user => {
-                        user.map( atts => {
-                            let newUser = {
-                                first_name: atts.first_name,
-                                last_name: atts.last_name,
-                                status: users.status
-                            }
+                // res.map(users => {
+                //     getUserById(users.account_to).then(user => {
+                //         user.map( atts => {
+                //             let newUser = {
+                //                 first_name: atts.first_name,
+                //                 last_name: atts.last_name,
+                //                 status: users.status
+                //             }
                             
-                            this.setState({
-                                list: [...this.state.list, newUser ]
-                            })
-                        })
-                    })
-                })
+                //             this.setState({
+                //                 list: [...this.state.list, newUser ]
+                //             })
+                //         })
+                //     })
+                // })
             }
         });
     }
