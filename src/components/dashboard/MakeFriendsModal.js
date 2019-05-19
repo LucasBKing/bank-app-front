@@ -19,10 +19,11 @@ class MakeFriendsModal extends Component {
             account_login_id: this.state.account_login_id
         }
         getListOfPossibleFriends(user).then(res => {
-            if (res)
+            res.map(user => {
                 this.setState({
-                    list_users: res
+                    list_users: [...this.state.list_users, user]
                 })
+            })
         })
     }
 

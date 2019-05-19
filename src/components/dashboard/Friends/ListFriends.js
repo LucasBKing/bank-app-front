@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { ListGroup } from 'react-bootstrap';
-import { getFriendsList, getUserById } from '../../functions/userFunctions';
+import { getUserById } from '../../functions/userFunctions';
+import { getFriendsList } from '../../functions/login_accountFunctions';
 
 class ListFriends extends Component {
     constructor(props) {
@@ -8,33 +9,33 @@ class ListFriends extends Component {
 
         this.state = {
             user_id: props.account_id,
-            account_login_id: props.account_login_id,
+            account_login_id: props.login_id,
             list: []
         }
     }
 
     componentDidMount() {
-        let account = {
-            user_id: this.state.user_id,
-            
-        }
-        getFriendsList(this.state.user_id).then(res => {
+
+        getFriendsList(this.state.account_login_id).then(res => {
             if(res) {
-                // res.map(users => {
-                //     getUserById(users.account_to).then(user => {
-                //         user.map( atts => {
-                //             let newUser = {
-                //                 first_name: atts.first_name,
-                //                 last_name: atts.last_name,
-                //                 status: users.status
-                //             }
-                            
-                //             this.setState({
-                //                 list: [...this.state.list, newUser ]
-                //             })
-                //         })
-                //     })
-                // })
+                res.map(users => {
+                    if(users.status === 'Aceito') {
+                        getUserById(users.account_to).then(user => {
+                            user.map( atts => {
+                                
+                                let newUser = {
+                                    first_name: atts.first_name,
+                                    last_name: atts.last_name,
+                                    email: atts.email                               
+                                }
+                                
+                                this.setState({
+                                    list: [...this.state.list, newUser ]
+                                })
+                            })
+                        })
+                    }
+                })
             }
         });
     }
@@ -48,7 +49,7 @@ class ListFriends extends Component {
                 <ListGroup variant="flush">
                 {
                     list.map((user, key) => {
-                        return <ListGroup.Item key={key}>Name: {user.first_name} {user.last_name} Status: {user.status}</ListGroup.Item>
+                        return <ListGroup.Item key={key}>Name: {user.first_name} {user.last_name} Email: {user.email}</ListGroup.Item>
                     })
                 }
                 </ListGroup>

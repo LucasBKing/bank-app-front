@@ -1,7 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Col, Button, Modal  } from 'react-bootstrap';
 import { getAccountBankById } from '../../functions/userFunctions';
-import { getFriendsList, getUserById, insertTransaction, updateCurrentDebitBalance, getCurrentDebitBalance, getAccountCreditCardByAccountBankId, updateCurrentCreditCardBalance } from '../../functions/userFunctions';
+import { 
+    getUserById, 
+    insertTransaction, 
+    updateCurrentDebitBalance, 
+    getCurrentDebitBalance, 
+    getAccountCreditCardByAccountBankId, 
+    updateCurrentCreditCardBalance
+} from '../../functions/userFunctions';
+import {
+    getFriendsList
+} from '../../functions/login_accountFunctions'
 
 class TransactionModal extends Component {
     constructor(props) {
@@ -38,33 +48,33 @@ class TransactionModal extends Component {
                 account_bank_id: account.account_bank_id
             })
             // Get friend list
-            getFriendsList(user).then(res => {
+            getFriendsList(user.account_login_id).then(res => {
                 if(res) {
                     // Getting one by one
                     res.map(users => {
-                        // Getting the friend stats from Users table
-                        getUserById(users.account_to).then(user => {
-                            // Getting one by one
-                            user.map( atts => {
-                                // Getting the account bank Id of friend
-                                
-                                getAccountBankById(atts.Id).then( account_friend => {
-                                    
-                                    if(users.status === "Aceito") {
-                                        let newUser = {
-                                            first_name: atts.first_name,
-                                            last_name: atts.last_name,
-                                            user_id: atts.Id,
-                                            account_bank_id: account_friend.account_bank_id
-                                        }
-                                        this.setState({
-                                            list_possible_transaction: [...this.state.list_possible_transaction, newUser ]
-                                        })
+                            // Getting the friend stats from Users table
+                            getUserById(users.account_to).then(user => {
+                                // Getting one by one
+                                user.map( atts => {
+                                    // Getting the account bank Id of friend
+                                    getAccountBankById(atts.Id).then( account_friend => {
+                                        
+                                        if(users.status === "Aceito") {
+                                            let newUser = {
+                                                first_name: atts.first_name,
+                                                last_name: atts.last_name,
+                                                user_id: atts.Id,
+                                                account_bank_id: account_friend.account_bank_id
+                                            }
+                                            this.setState({
+                                                list_possible_transaction: [...this.state.list_possible_transaction, newUser ]
+                                            })
 
-                                    }        
-                                })                        
+                                        }        
+                                    })                        
+                                })
                             })
-                        })
+                          
                     })
                 }
             });
@@ -79,7 +89,7 @@ class TransactionModal extends Component {
         this.setState({
             account_to_insert_transaction: account_to_insert_transaction
         })
-        // Getting the current debit balance to test if it's possibli to make the transaction
+        // Getting the current debit balance to test if it's possible to make the transaction
         getCurrentDebitBalance(this.state.account_bank_id).then(currentBalance => {
             //If debit balance is insufficiente, try to get credit card Id
             if (currentBalance < this.state.value) {

@@ -75,6 +75,18 @@ export const getAccountCreditCardByAccountBankId = account_bank_id => {
         })
 }
 
+export const getUserIdByAccountLogin = account_login_id => {
+    return axios
+        .get('http://localhost:4200/api/user_id_by_account_login_id', {
+            params: {
+                account_login_id: account_login_id
+            }
+        })
+        .then( res => {
+            return res.data;
+        })
+}
+
 export const getAccountLoginById = user_id => {
     return axios
         .get('http://localhost:4200/api/account_login_by_id', {
@@ -195,25 +207,11 @@ export const getListOfUsers = user_id => {
         });
 }
 
-export const getListOfPossibleFriends = user => {
+export const getListOfPossibleFriends = account => {
     return axios
         .get('http://localhost:4200/api/list_of_possible_friends', { 
             params: { 
-                user_id: user.user_id,
-                account_login_id: user.account_login_id
-
-            } 
-        })
-        .then( res=> { 
-            return res.data 
-        });
-}
-
-export const getFriendsList = account => {
-    return axios
-        .get('http://localhost:4200/api/friends_list', { 
-            params: { 
-                account_to: account.user_id,
+                user_id: account.user_id,
                 account_login_id: account.account_login_id
             } 
         })
@@ -221,6 +219,8 @@ export const getFriendsList = account => {
             return res.data 
         });
 }
+
+
 
 export const getUserById = user_id => {
     return axios
