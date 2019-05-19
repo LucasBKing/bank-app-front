@@ -6,7 +6,9 @@ import DepositModal from './DepositModal';
 import MakeFriendsModal from './MakeFriendsModal';
 import ListFriends from './Friends/ListFriends';
 import TransactionModal from './Transactions/TransactionModal';
-import { getFriendsRequests } from '../functions/userFunctions';
+import ListTransactions from './Transactions/ListTransactions';
+import { getFriendsRequests, getAccountBankById } from '../functions/userFunctions';
+
 
 class Dashboard extends Component {
     constructor(props) {
@@ -16,6 +18,7 @@ class Dashboard extends Component {
             name: '',
             user_id: null,
             login_id: null,
+            account_bank_id: null,
             friendRequest: false, 
             modalDepositShow: false,
             modalMakeFriendsShow: false,
@@ -29,12 +32,17 @@ class Dashboard extends Component {
         if(token) {
             try {
                 let decoded = jwt_decode(token)
-                this.setState({
-                    name: decoded.dataValues.login,
-                    user_id: decoded.dataValues.user_id,
-                    login_id: decoded.dataValues.login_id
+ 
+                // Getting account bank id use future in components
+                getAccountBankById(decoded.dataValues.user_id).then(account_bank => {
+                    this.setState({
+                        name: decoded.dataValues.login,
+                        user_id: decoded.dataValues.user_id,
+                        login_id: decoded.dataValues.login_id,
+                        account_bank_id: account_bank.account_bank_id
+                    })
                 })
-                getFriendsRequests(decoded.dataValues.user_id).then(res => {
+                getFriendsRequests(decoded.dataValues).then(res => {
                     if(res.length > 0) {
                         this.setState({
                             friendRequest: true
@@ -121,6 +129,7 @@ class Dashboard extends Component {
                 <Row>
                     <Col>
                         <h1>Transactions</h1>
+                        <ListTransactions account_bank_id={this.state.account_bank_id}/>
                     </Col>
                     <Col>
                         <h1>List of friends</h1>

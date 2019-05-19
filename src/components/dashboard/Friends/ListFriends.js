@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Table } from 'react-bootstrap';
 import { getUserById } from '../../functions/userFunctions';
 import { getFriendsList } from '../../functions/login_accountFunctions';
 
@@ -46,17 +46,30 @@ class ListFriends extends Component {
             <Fragment>
                 { list
                 ?
-                <ListGroup variant="flush">
+                <Table responsive>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>First name</th>
+                            <th>Last name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
                 {
                     list.map((user, key) => {
-                        return <ListGroup.Item key={key}>Name: {user.first_name} {user.last_name} Email: {user.email}</ListGroup.Item>
+                        return <tbody key={key}>
+                                        <tr>
+                                            <td>{key}</td>
+                                            <td>{user.first_name}</td>
+                                            <td>{user.last_name}</td>
+                                            <td>{user.email}</td>
+                                        </tr>
+                                    </tbody>
                     })
                 }
-                </ListGroup>
+                </Table>
                 :
-                <ListGroup variant="flush">
-                    <ListGroup.Item>You dont have friends yet!</ListGroup.Item>
-                </ListGroup>
+                null
                 }
             </Fragment>
         );
