@@ -11,7 +11,79 @@ import {
 } from '../../functions/userFunctions';
 import {
     getFriendsList
-} from '../../functions/login_accountFunctions'
+} from '../../functions/login_accountFunctions';
+import {
+    getTransactions,
+    updateTransactionStatus
+} from '../../functions/transactionsFunctions'
+
+
+
+function testTransactionDuplicated(id1, id2, transaction_type) {
+    
+    getTransactions(id2).then( transactions => {
+        
+        let length = transactions.length;
+        let created2 = new Date(transactions[length-2].Created)
+        let created1 = new Date(transactions[length-1].Created)
+        
+        let newTransaction = {
+            value: transactions[length-1].value,
+            by_who: transactions[length-1].account_bank_id,
+            to_who: transactions[length-1].to_who,
+            year: created1.getFullYear(),
+            month: created1.getMonth() + 1,
+            day: created1.getDate(),
+            hours: created1.getHours(),
+            minutes: created1.getMinutes(),
+            seconds: created1.getSeconds(),
+            status: 'ok'
+        }
+
+        let oldTransaction = {
+            Id: transactions[length-2].Id,
+            value: transactions[length-2].value,
+            by_who: transactions[length-2].account_bank_id,
+            to_who: transactions[length-2].to_who,
+            year: created2.getFullYear(),
+            month: created2.getMonth() + 1,
+            day: created2.getDate(),
+            hours: created2.getHours(),
+            minutes: created2.getMinutes(),
+            seconds: created2.getSeconds(),
+            status: transactions[length-2].status ? 'ok' : 'cancelled'
+        }
+        
+        if (newTransaction.value === oldTransaction.value &&
+            newTransaction.by_who === oldTransaction.by_who &&
+            newTransaction.to_who === oldTransaction.to_who &&
+            newTransaction.year === oldTransaction.year &&
+            newTransaction.month === oldTransaction.month &&
+            newTransaction.day === oldTransaction.day &&
+            newTransaction.hours === oldTransaction.hours
+            ) {
+                if( (newTransaction.minutes - oldTransaction.minutes) < 2 ) {
+                    updateTransactionStatus(oldTransaction.Id).then(res => {
+                        if(transaction_type === "debit") {
+                            updateCurrentDebitBalance(id2, newTransaction.value).then(res2 => {
+                                updateCurrentDebitBalance(newTransaction.to_who, -newTransaction.value).then(res2 => {
+                                    console.log("asd", res, res2);
+                                })    
+                            })
+                        } else if(transaction_type === "credit card") {
+                            updateCurrentDebitBalance(newTransaction.to_who, -newTransaction.value).then(res2 => {
+                                updateCurrentCreditCardBalance(id1, -newTransaction.value).then(res2 => {
+                                    console.log("asdasd", res, res2);
+                                })    
+                            })
+                        } 
+                    })
+                } 
+            }
+            
+    })
+    
+}
 
 class TransactionModal extends Component {
     constructor(props) {
@@ -94,33 +166,34 @@ class TransactionModal extends Component {
             //If debit balance is insufficiente, try to get credit card Id
             if (currentBalance < this.state.value) {
                 getAccountCreditCardByAccountBankId(this.state.account_bank_id).then(currentCreditCardBalance => {
-                    // Setting up the Credit Card Id, cause in the future the user can use it to transfer money by credit card
-                    this.setState({
-                        credit_card_id: currentCreditCardBalance.results[0].Id
-                    })
                     
-                    // Testing if there is a credit card
-                    if(currentCreditCardBalance) {    
-                        let creditCardBalance = currentCreditCardBalance.results[0].balance;
-                        let creditCardLine = currentCreditCardBalance.results[0].credit_line;
-                        // If its impossible use credit card to solve problem
-                        if ((creditCardBalance === creditCardLine) || ((creditCardBalance + this.state.value) >  creditCardLine)) {
-                            this.setState({
-                                showInsufficientMoney: true
-                            })
-                        } else {
-                            // Try to withdraw from creditcard
-                            this.setState({
-                                formCreditCardDisplay: 'block',
-                                formTransactionDisplay: 'none'
-                            })
+                        // Setting up the Credit Card Id, cause in the future the user can use it to transfer money by credit card
+                        this.setState({
+                            credit_card_id: currentCreditCardBalance.results[0].Id
+                        })
+                        
+                        // Testing if there is a credit card
+                        if(currentCreditCardBalance) {    
+                            let creditCardBalance = currentCreditCardBalance.results[0].balance;
+                            let creditCardLine = currentCreditCardBalance.results[0].credit_line;
+                            // If its impossible use credit card to solve problem
+                            if ((creditCardBalance === creditCardLine) || ((creditCardBalance + this.state.value) >  creditCardLine)) {
+                                this.setState({
+                                    showInsufficientMoney: true
+                                })
+                            } else {
+                                // Try to withdraw from creditcard
+                                this.setState({
+                                    formCreditCardDisplay: 'block',
+                                    formTransactionDisplay: 'none'
+                                })
+                            }
                         }
-                    }
-                    // If user dont have credit card and dont have money
-                    this.setState({
-                        showInsufficientMoney: true
-                    })
-
+                        // If user dont have credit card and dont have money
+                        this.setState({
+                            showInsufficientMoney: true
+                        })
+                    
                 })
                 
             } else {
@@ -130,7 +203,9 @@ class TransactionModal extends Component {
                     updateCurrentDebitBalance(account_to_insert_transaction.user_id, this.state.value).then(res => {
                         // Updating the withdraw
                         updateCurrentDebitBalance(this.state.user_id, -this.state.value).then(res2 => {
-                            // Message Success
+                            // Try identify if last transactions was the same
+                            testTransactionDuplicated(this.state.user_id, this.state.account_bank_id, "debit");
+                            
                         })  
                     })
                 })
@@ -145,7 +220,8 @@ class TransactionModal extends Component {
             updateCurrentDebitBalance(this.state.account_to_insert_transaction.user_id, this.state.value).then(res => {
                 // Updating the withdraw from credit card
                 updateCurrentCreditCardBalance(this.state.credit_card_id, this.state.value).then(res2 => {
-                    // Message Success
+                    // Try identify if last transactions was the same
+                    testTransactionDuplicated(this.state.credit_card_id, this.state.account_bank_id, "credit card")
                 })  
             })
         })

@@ -11,3 +11,13 @@ export const getTransactions = account_bank_id  => {
         return res.data;
     })
 }
+
+export const updateTransactionStatus = Id => {
+    return axios
+        .post('http://localhost:4200/api/udpate_transaction_status' ,{
+            Id: Id
+        })
+        .then(res => {
+            return res.data;
+        })
+}

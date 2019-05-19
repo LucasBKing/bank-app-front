@@ -62,9 +62,9 @@ class UserStats extends Component {
                             <ListGroup.Item>Balance debit: { balance }</ListGroup.Item>
                             { hasCreditCard
                             ?
-                                <ListGroup.Item>Balance credit card: { balance_credit_card }</ListGroup.Item>
+                                <ListGroup.Item >Balance credit card: { balance_credit_card }</ListGroup.Item>
                             :
-                                <Button variant="outline-info" onClick={() => this.setState({ modalCreditCardShow: true })}>
+                                <Button style={{ marginTop: '5px' }}variant="outline-info" block onClick={() => this.setState({ modalCreditCardShow: true })}>
                                     Create your credit card now!
                                 </Button>
                             }
@@ -72,7 +72,7 @@ class UserStats extends Component {
                         </ListGroup>
                         </Col>
                         <Col xs={6} md={4} sm>
-                            <Image src={DefaultImg} roundedCircle />
+                            <Image src={DefaultImg} roundedCircle fluid/>
                         </Col>
     
                 </Row>

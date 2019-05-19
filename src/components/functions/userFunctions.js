@@ -176,9 +176,10 @@ export const getCurrentDebitBalance = account_bank_id => {
 export const updateRequestFriend = account => {
     return axios
         .post('http://localhost:4200/api/update_request_friend' , {
-            user_id: account.user_id,
+            account_to: account.account_to,
             account_login_id: account.account_login_id,
-            status: account.status
+            status: account.status,
+            action_id: account.action_id
         })
         .then( res => {
             return res.data;

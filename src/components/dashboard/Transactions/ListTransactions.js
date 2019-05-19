@@ -1,13 +1,11 @@
 import React, { Component, Fragment } from 'react';
-import { ListGroup, Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { getTransactions } from '../../functions/transactionsFunctions';
-import Datetime from 'react-datetime';
 
 class ListTransactions extends Component {
     constructor(props) {
         super(props);
 
-        console.log(props);
         this.state = {
             list_transactions: [],
             account_bank_id: props.account_bank_id
@@ -16,20 +14,25 @@ class ListTransactions extends Component {
 
     componentDidMount() {
         getTransactions(this.state.account_bank_id).then(list_transactions => {
+            
             list_transactions.map(transaction => {
                 let created = new Date(transaction.Created)
-
+                let currentStatus = "Ok";
+                
+                if(transaction.status  == 1) {
+                    currentStatus = "cancelled";
+                }
                 let newTransaction = {
                     value: transaction.value,
                     by_who: transaction.account_bank_id,
                     to_who: transaction.to_who,
                     year: created.getFullYear(),
                     month: created.getMonth() + 1,
-                    day: created.getDay(),
+                    day: created.getDate(),
                     hours: created.getHours(),
                     minutes: created.getMinutes(),
                     seconds: created.getSeconds(),
-                    status: transaction.status ? 'ok' : 'cancelled'
+                    status: currentStatus
                 }
 
                 this.setState({
@@ -79,7 +82,6 @@ class ListTransactions extends Component {
             </Fragment>
         );
     }
-
 }
 
 export default ListTransactions;

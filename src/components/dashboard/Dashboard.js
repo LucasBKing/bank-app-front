@@ -83,7 +83,7 @@ class Dashboard extends Component {
         }
         return (
             <Fragment>
-            <Navbar bg="dark" variant="dark">
+            <Navbar bg="dark" variant="dark" style={{ marginBottom: '20px' }}>
                 <Nav>
                     <Navbar.Brand href="#home">Ekki</Navbar.Brand>
                 </Nav>
@@ -108,7 +108,7 @@ class Dashboard extends Component {
                 </Nav>
             </Navbar>
             <UserStats stats={this.state.user_id}/>                
-            <Nav className="justify-content-center" activeKey="/dashboard">
+            <Nav className="justify-content-center" activeKey="/dashboard" style={{ marginTop: '20px', marginBottom: '20px', padding: '10px'}}>
                 <Nav.Item>
                     <Button variant="outline-info" onClick={() => this.setState({ modalDepositShow: true })}>
                         Depositar
