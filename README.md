@@ -19,8 +19,8 @@ $ ~/path/to/folder: git clone https://github.com/LucasBKing/bank-app-back.git
 Após clonar o repositório instale as dependências de ambos os repositorios:
 
 ```
-$ ~/path/to/folder/bank-app-front: git clone npm install
-$ ~/path/to/folder/bank-app-back: git clone npm install
+$ ~/path/to/folder/bank-app-front: npm install
+$ ~/path/to/folder/bank-app-back: npm install
 ```
 
 Com o MySQL instalado rode o comando abaixo, dentro da pasta 'bank-app-back' para criar o database que será utilizado pela API:
@@ -43,7 +43,7 @@ const pool =  mysql.createPool({
 ...
 ```
 
-Se tiver problemas em conseguir efetuar a conexão com o usuário MySQL, [esse](https://dev.mysql.com/doc/refman/8.0/en/creating-accounts.html) acesse esse link.
+Se tiver problemas em conseguir efetuar a conexão com o usuário MySQL,  acesse [esse](https://dev.mysql.com/doc/refman/8.0/en/creating-accounts.html) link.
 
 
 ### Inicializando
@@ -55,4 +55,4 @@ $ ~/path/to/folder/bank-app-back: npm start
 ```
 
 ## Autores
-* **Lucas Barbosa **
+* Lucas Barbosa
