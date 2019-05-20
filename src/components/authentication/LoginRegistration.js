@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Form, Col, Button } from 'react-bootstrap';
-import { registerAccountLogin } from '../functions/userFunctions';
+import { Form, Col, Button, Row } from 'react-bootstrap';
+import { registerAccountLogin } from '../functions/loginAccountFunctions';
 import { withRouter, Redirect } from 'react-router-dom';
 
 class LoginRegistration extends Component {
@@ -26,18 +26,23 @@ class LoginRegistration extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
-        let account = {
-            login_name: this.state.login_name,
-            password_login: this.state.password_login,
-            user_id: this.state.user_id
-        }
-
-        registerAccountLogin(account).then(res => {
-            this.setState({
-                navigate: true
-            });
-        })
+        if(this.state.login_name === '' || this.state.password_login === '')
+        {
+            alert('Please, fill out all fields');
+        } else {
+            let account = {
+                login_name: this.state.login_name,
+                password_login: this.state.password_login,
+                user_id: this.state.user_id
+            }
+    
+            registerAccountLogin(account).then(res => {
+                this.setState({
+                    navigate: true
+                });
+            })
+        }   
+        
     }
 
     render() {
@@ -48,23 +53,28 @@ class LoginRegistration extends Component {
         }}/>;
         return(
             <Fragment>
-                <h1>Olá Sr. {user_name}, crie um login e senha para acessar sua conta online.</h1>
-                <Form onSubmit={this.handleSubmit}>
-                    <Form.Row>
-                        <Form.Group as={Col} controlId="login_name">
-                            <Form.Label>Login name</Form.Label>
-                            <Form.Control type="text" placeholder="Login name" onChange={this.handleChange} />
-                        </Form.Group>
+                <Row float="center">
+                    <Col className="text-center">
+                        <h1>Hello {user_name}, create a login name and a password to connect in your account.</h1>
+                        <Form style={{ padding: '30px' }} onSubmit={this.handleSubmit}>
+                            <Form.Row>
+                                <Form.Group as={Col} controlId="login_name">
+                                    <Form.Label>Login name</Form.Label>
+                                    <Form.Control required type="text" placeholder="Login name" onChange={this.handleChange} />
+                                </Form.Group>
 
-                        <Form.Group as={Col} controlId="password_login">
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control type="password" placeholder="Password" onChange={this.handleChange} />
-                        </Form.Group>
-                        <Button type="submit">
-                            Send
-                        </Button>
-                    </Form.Row>
-                </Form>
+                                <Form.Group as={Col} controlId="password_login">
+                                    <Form.Label>Password</Form.Label>
+                                    <Form.Control required type="password" placeholder="Password" onChange={this.handleChange} />
+                                </Form.Group>
+                                
+                            </Form.Row>
+                            <Button type="submit">
+                                Send
+                            </Button>
+                        </Form>
+                    </Col>
+                </Row>
             </Fragment>
             
 

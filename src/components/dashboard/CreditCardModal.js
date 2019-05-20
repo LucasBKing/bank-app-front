@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Col, Button, Modal } from 'react-bootstrap';
-import { createCreditCard } from '../functions/userFunctions';
+import { createCreditCard } from '../functions/creditCardFunctions';
 let generator = require('creditcard-generator');
 let moment = require('moment');
 
@@ -19,38 +19,44 @@ class CreditCardModal extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        
-        const code = generator.GenCC("VISA");
+        if(this.state.password === '') {
+            alert('Please, fill out all fields');
+        } else {
+            const code = generator.GenCC("VISA");
 
-        let creditCard = {
-            code: code[0],
-            balance: 0,
-            credit_line: '',
-            password_cd: this.state.password,
-            due_date: moment().add(10, 'years').calendar(),
-            account_bank_id: this.state.account_bank_id
+            let creditCard = {
+                code: code[0],
+                balance: 0,
+                credit_line: '',
+                password_cd: this.state.password,
+                due_date: moment().add(10, 'years').calendar(),
+                account_bank_id: this.state.account_bank_id
+            }
+    
+            switch(this.state.account_type) {
+                case 'Bronze':
+                    creditCard.credit_line = 500;
+                    break;
+                case 'Silver':
+                    creditCard.credit_line = 800;
+                    break;
+                case 'Gold':
+                    creditCard.credit_line = 1100;
+                    break;
+                case 'Platinum':
+                    creditCard.credit_line = 1400;
+                    break;
+                default:
+                    creditCard.credit_line = 0;
+            }
+    
+            createCreditCard(creditCard).then(res => {
+                alert('Success');
+                
+                window.location.reload();
+            })
         }
-
-        switch(this.state.account_type) {
-            case 'Bronze':
-                creditCard.credit_line = 200;
-                break;
-            case 'Silver':
-                creditCard.credit_line = 400;
-                break;
-            case 'Gold':
-                creditCard.credit_line = 600;
-                break;
-            case 'Platinum':
-                creditCard.credit_line = 1000;
-                break;
-            default:
-                creditCard.credit_line = 0;
-        }
-
-        createCreditCard(creditCard).then(res => {
-            console.log(res);
-        })
+       
     }
 
     handleChange = (event) => {
@@ -80,12 +86,12 @@ class CreditCardModal extends Component {
                             <Form.Row>
                                 <Form.Group as={Col} controlId="password">
                                     <Form.Label>Password</Form.Label>
-                                    <Form.Control type="password" placeholder="Passwrod" onChange={this.handleChange} />
+                                    <Form.Control required type="password" placeholder="Passwrod" onChange={this.handleChange} />
                                 </Form.Group>
-                                <Button type="submit" >
-                                    Create
-                                </Button>
                             </Form.Row>
+                            <Button type="submit" >
+                                Create
+                            </Button>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>

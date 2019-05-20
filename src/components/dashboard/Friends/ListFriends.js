@@ -1,7 +1,9 @@
 import React, { Component, Fragment } from 'react';
 import { Table, Button } from 'react-bootstrap';
-import { getUserById, getAccountLoginById, updateRequestFriend } from '../../functions/userFunctions';
-import { getFriendsList } from '../../functions/login_accountFunctions';
+import { getUserById } from '../../functions/userFunctions';
+import { updateRequestFriend, getFriendsList } from '../../functions/friendsFunctions'
+import { getAccountLoginById } from '../../functions/loginAccountFunctions';
+import '../../../assets/css/ListFriends.css'
 
 class ListFriends extends Component {
     constructor(props) {
@@ -62,7 +64,8 @@ class ListFriends extends Component {
 
         updateRequestFriend(first_row).then( res => {
             updateRequestFriend(second_row).then( res2 => {
-                console.log(res, res2)
+                alert('Success');
+                window.location.reload();
             })
         })
     } 
@@ -73,7 +76,7 @@ class ListFriends extends Component {
             <Fragment>
                 { list
                 ?
-                <Table responsive>
+                <Table className="custom-table" responsive>
                     <thead>
                         <tr>
                             <th>#</th>
@@ -92,7 +95,7 @@ class ListFriends extends Component {
                                             <td>{user.last_name}</td>
                                             <td>{user.email}</td>
                                             <td>
-                                                <Button variant="outline-primary" onClick={() => this.handleDeleteFriend(user, 'Excluido')}>
+                                                <Button block className="custom-btn-delete" onClick={() => this.handleDeleteFriend(user, 'Excluido')}>
                                                     Delete
                                                 </Button>
                                             </td>

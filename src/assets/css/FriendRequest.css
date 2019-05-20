@@ -1,0 +1,29 @@
+.custom-table thead {
+    background-color: #E84A5F;
+    color: white
+}
+
+.custom-table tbody {
+    border: none !important;
+}
+
+.custom-table th, td {
+    border-collapse: collapse !important;
+    border: none !important;
+}
+
+.custom-table button {
+    margin-left: 4px;
+    margin-bottom: 5px;
+    background-color: #99B898 !important;
+    border-color: #99B898 !important;
+    border-radius: 0 !important;
+    color: white;
+}
+
+.custom-table button:hover {
+    margin-left: 2px;
+    background-color: #E84A5F !important;
+    border-color: #E84A5F !important;
+    border-radius: 0 !important;
+}

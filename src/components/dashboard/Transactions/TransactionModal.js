@@ -1,21 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Col, Button, Modal  } from 'react-bootstrap';
-import { getAccountBankById } from '../../functions/userFunctions';
-import { 
-    getUserById, 
-    insertTransaction, 
-    updateCurrentDebitBalance, 
-    getCurrentDebitBalance, 
-    getAccountCreditCardByAccountBankId, 
-    updateCurrentCreditCardBalance
-} from '../../functions/userFunctions';
-import {
-    getFriendsList
-} from '../../functions/login_accountFunctions';
-import {
-    getTransactions,
-    updateTransactionStatus
-} from '../../functions/transactionsFunctions'
+import { getAccountBankById } from '../../functions/accountBankFunctions';
+import { getUserById } from '../../functions/userFunctions';
+import {  getAccountCreditCardByAccountBankId, updateCurrentCreditCardBalance } from '../../functions/creditCardFunctions'
+import {  updateCurrentDebitBalance, getCurrentDebitBalance } from '../../functions/depositFunctions';
+import { getFriendsList } from '../../functions/friendsFunctions';
+import { insertTransaction, getTransactions, updateTransactionStatus } from '../../functions/transactionsFunctions'
 
 
 
@@ -156,61 +146,67 @@ class TransactionModal extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-        // Getting the account_bank_id from user to recieve the value
-        let account_to_insert_transaction = this.state.list_possible_transaction.find( option => option.account_bank_id === this.state.transaction_to);
-        this.setState({
-            account_to_insert_transaction: account_to_insert_transaction
-        })
-        // Getting the current debit balance to test if it's possible to make the transaction
-        getCurrentDebitBalance(this.state.account_bank_id).then(currentBalance => {
-            //If debit balance is insufficiente, try to get credit card Id
-            if (currentBalance < this.state.value) {
-                getAccountCreditCardByAccountBankId(this.state.account_bank_id).then(currentCreditCardBalance => {
-                    
-                        // Setting up the Credit Card Id, cause in the future the user can use it to transfer money by credit card
-                        this.setState({
-                            credit_card_id: currentCreditCardBalance.results[0].Id
-                        })
+        if(this.state.value < 0) {
+            alert('Please, make sure that the value is bigger than R$0');
+        } else {
+            // Getting the account_bank_id from user to recieve the value
+            let account_to_insert_transaction = this.state.list_possible_transaction.find( option => option.account_bank_id === this.state.transaction_to);
+            this.setState({
+                account_to_insert_transaction: account_to_insert_transaction
+            })
+            // Getting the current debit balance to test if it's possible to make the transaction
+            getCurrentDebitBalance(this.state.account_bank_id).then(currentBalance => {
+                //If debit balance is insufficiente, try to get credit card Id
+                if (currentBalance < this.state.value) {
+                    getAccountCreditCardByAccountBankId(this.state.account_bank_id).then(currentCreditCardBalance => {
                         
-                        // Testing if there is a credit card
-                        if(currentCreditCardBalance) {    
-                            let creditCardBalance = currentCreditCardBalance.results[0].balance;
-                            let creditCardLine = currentCreditCardBalance.results[0].credit_line;
-                            // If its impossible use credit card to solve problem
-                            if ((creditCardBalance === creditCardLine) || ((creditCardBalance + this.state.value) >  creditCardLine)) {
-                                this.setState({
-                                    showInsufficientMoney: true
-                                })
-                            } else {
-                                // Try to withdraw from creditcard
-                                this.setState({
-                                    formCreditCardDisplay: 'block',
-                                    formTransactionDisplay: 'none'
-                                })
-                            }
-                        }
-                        // If user dont have credit card and dont have money
-                        this.setState({
-                            showInsufficientMoney: true
-                        })
-                    
-                })
-                
-            } else {
-                // Creating a new transaction
-                insertTransaction(account_to_insert_transaction.account_bank_id, this.state.account_bank_id, this.state.value).then( res => {
-                    // Updating the recieved value to user
-                    updateCurrentDebitBalance(account_to_insert_transaction.user_id, this.state.value).then(res => {
-                        // Updating the withdraw
-                        updateCurrentDebitBalance(this.state.user_id, -this.state.value).then(res2 => {
-                            // Try identify if last transactions was the same
-                            testTransactionDuplicated(this.state.user_id, this.state.account_bank_id, "debit");
+                            // Setting up the Credit Card Id, cause in the future the user can use it to transfer money by credit card
+                            this.setState({
+                                credit_card_id: currentCreditCardBalance.results[0].Id
+                            })
                             
-                        })  
+                            // Testing if there is a credit card
+                            if(currentCreditCardBalance) {    
+                                let creditCardBalance = currentCreditCardBalance.results[0].balance;
+                                let creditCardLine = currentCreditCardBalance.results[0].credit_line;
+                                // If its impossible use credit card to solve problem
+                                if ((creditCardBalance === creditCardLine) || ((creditCardBalance + this.state.value) >  creditCardLine)) {
+                                    this.setState({
+                                        showInsufficientMoney: true
+                                    })
+                                } else {
+                                    // Try to withdraw from creditcard
+                                    this.setState({
+                                        formCreditCardDisplay: 'block',
+                                        formTransactionDisplay: 'none'
+                                    })
+                                }
+                            }
+                            // If user dont have credit card and dont have money
+                            this.setState({
+                                showInsufficientMoney: true
+                            })
+                        
                     })
-                })
-            }            
-        })      
+                    
+                } else {
+                    // Creating a new transaction
+                    insertTransaction(account_to_insert_transaction.account_bank_id, this.state.account_bank_id, this.state.value).then( res => {
+                        // Updating the recieved value to user
+                        updateCurrentDebitBalance(account_to_insert_transaction.user_id, this.state.value).then(res => {
+                            // Updating the withdraw
+                            updateCurrentDebitBalance(this.state.user_id, -this.state.value).then(res2 => {
+                                // Try identify if last transactions was the same
+                                testTransactionDuplicated(this.state.user_id, this.state.account_bank_id, "debit");
+                                alert('Sucess');
+                                window.location.reload();
+                            })  
+                        })
+                    })
+                }            
+            })    
+        }
+          
     }
 
     handleAccetpWithdrawFromCreditCard = (event) => {
@@ -221,7 +217,9 @@ class TransactionModal extends Component {
                 // Updating the withdraw from credit card
                 updateCurrentCreditCardBalance(this.state.credit_card_id, this.state.value).then(res2 => {
                     // Try identify if last transactions was the same
-                    testTransactionDuplicated(this.state.credit_card_id, this.state.account_bank_id, "credit card")
+                    testTransactionDuplicated(this.state.credit_card_id, this.state.account_bank_id, "credit card");
+                    alert('Sucess');
+                                window.location.reload();
                 })  
             })
         })

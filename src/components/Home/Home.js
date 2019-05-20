@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Button, ButtonGroup, Container, Row, Col } from 'react-bootstrap';
 import Login from '../authentication/Login';
+import '../../assets/css/Home.css';
 
 class Home extends Component {
     constructor(props) {
@@ -27,23 +28,23 @@ class Home extends Component {
                 <Container>
                         <Row>
                             <Col>
-                                <h1 className="text-center">Ekki</h1>
+                                <h1 className="text-center" style={{ fontWeight: 'bold', fontSize: '150px', marginBottom: '30px' }}>Ekki</h1>
                             </Col>
                             
                         </Row>
                         
-                        <div className="d-flex flex-column">
+                        <div className="d-flex flex-column text-center">
                             <ButtonGroup size="lg">
                                 <Button
-                                    variant="primary"
+                                    className="custom-btn"
                                     onClick={() => this.setState({ modalLoginShow: true })}
-                                    >
+                                >
                                     Login
                                 </Button>
                                 <Button
-                                    variant="primary"
+                                    className="custom-btn"
                                     onClick={() => this.props.history.push('/user_registration')}
-                                    >
+                                >
                                     SignUp
                                 </Button>
                             </ButtonGroup>

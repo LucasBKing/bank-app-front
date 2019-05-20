@@ -21,3 +21,15 @@ export const updateTransactionStatus = Id => {
             return res.data;
         })
 }
+
+export const insertTransaction = (to_who, account_bank_id, value) => {
+    return axios
+        .post('http://localhost:4200/api/insert_transaction' , {
+            to_who: to_who,
+            account_bank_id: account_bank_id,
+            value: value
+        })
+        .then( res => {
+            return res.data;
+        })
+}

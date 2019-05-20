@@ -1,68 +1,58 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Ekki MVP
 
-## Available Scripts
+MVP com CRUD de amigos, possibilidade de fazer transações em dinheiro, depósitos para sua conta e listagem de todas as suas transações, bem como o saldo atual de sua conta no débito e cartão de crédito, esse segundo dependendo se já foi criado ou não;
 
-In the project directory, you can run:
+### Pré-requisitos
 
-### `npm start`
+```
+MySQL
+NodeJS
+```
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Instalando
+Crie uma nova pasta com o nome que desejar, ali clone o repósito do front-end e back-end:
+```
+$ ~/path/to/folder: git clone https://github.com/LucasBKing/bank-app-front.git
+$ ~/path/to/folder: git clone https://github.com/LucasBKing/bank-app-back.git
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Após clonar o repositório instale as dependências de ambos os repositorios:
 
-### `npm test`
+```
+$ ~/path/to/folder/bank-app-front: git clone npm install
+$ ~/path/to/folder/bank-app-back: git clone npm install
+```
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Com o MySQL instalado rode o comando abaixo, dentro da pasta 'bank-app-back' para criar o database que será utilizado pela API:
 
-### `npm run build`
+```
+mysql -u [username] -p < ekkiDB.sql
+```
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Dentro do diretório bank-app-back edite o arquivo 'db_connection.js' com os dados do seu servidor local MySQL.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+```
+...
+const pool =  mysql.createPool({
+    connectionLimit: 10,
+    host: 'XXX',
+    user: 'XXX',
+    password: 'XXX',
+    database: 'ekkiDatabase'
+});
+...
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Se tiver problemas em conseguir efetuar a conexão com o usuário MySQL, [esse](https://dev.mysql.com/doc/refman/8.0/en/creating-accounts.html) acesse esse link.
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+### Inicializando
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Inicialize ambos projetos, utilizando npm start ou yarn start
+```
+$ ~/path/to/folder/bank-app-front: npm start
+$ ~/path/to/folder/bank-app-back: npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+## Autores
+* **Lucas Barbosa **

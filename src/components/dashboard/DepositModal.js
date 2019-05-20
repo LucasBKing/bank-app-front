@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Col, Button, Modal } from 'react-bootstrap';
-import { getAccountBankById, insertDeposit, updateCurrentDebitBalance } from '../functions/userFunctions';
+import { getAccountBankById } from '../functions/accountBankFunctions';
+import { insertDeposit, updateCurrentDebitBalance } from '../functions/depositFunctions';
+import '../../assets/css/DepositModal.css'
 
 class DepositModal extends Component {
     constructor(props) {
@@ -25,17 +27,22 @@ class DepositModal extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault();
-
-        insertDeposit(this.state.user_id, this.state.value).then( res => {
-            if(res) {
-                updateCurrentDebitBalance(this.state.user_id, this.state.value).then( res => {
-                    console.log('Deposit updated');
-                })
-                console.log(this.state.messageConfirm)
-            } else {
-                console.log(this.state.messageError)
-            }
-        })
+        if(this.state.value < 0 ) {
+            alert('Please, deposit values bigger than R$0.')
+        } else {
+            insertDeposit(this.state.user_id, this.state.value).then( res => {
+                if(res) {
+                    updateCurrentDebitBalance(this.state.user_id, this.state.value).then( res => {
+                        console.log('Deposit updated');
+                    })
+                    alert(this.state.messageConfirm)
+                    window.location.reload();
+                } else {
+                    console.log(this.state.messageError)
+                }
+            })
+        }
+        
     }
 
     handleChange = (event) => {
@@ -67,10 +74,11 @@ class DepositModal extends Component {
                                     <Form.Label>Value</Form.Label>
                                     <Form.Control type="text" placeholder="$$" onChange={this.handleChange} />
                                 </Form.Group>
-                                <Button type="submit" >
+                                
+                            </Form.Row>
+                            <Button type="submit" >
                                     Deposit
                                 </Button>
-                            </Form.Row>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>

@@ -1,0 +1,49 @@
+.modal-content {
+    font-family: 'Oswald', sans-serif;
+    border-radius: 0 !important;
+    border: 0 !important;
+}
+
+.modal-footer button:hover {
+    background: #FF847C !important;
+    color: #ffffff;
+    border: 2px solid #FF847C !important;
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+    text-transform: uppercase;
+    margin-bottom: 20px !important;
+}
+
+.modal-footer button {
+    background: #E84A5F !important;
+    color: #ffffff;
+    border: 0 solid #E84A5F !important;
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+    text-transform: uppercase;
+    margin-bottom: 20px !important;
+}
+
+.modal-body button:hover {
+    background: #FF847C !important;
+    color: #ffffff;
+    border: 2px solid #FF847C !important;
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+    text-transform: uppercase;
+    margin-bottom: 20px !important;
+}
+
+.modal-body button {
+    background: #E84A5F !important;
+    color: #ffffff;
+    border: 0 solid #E84A5F !important;
+    border-radius: 0 !important;
+    padding: 5px 10px !important;
+    text-transform: uppercase;
+    margin-bottom: 20px !important;
+}
+
+.modal-body input {
+    border-radius: 0 !important;
+}

@@ -6,7 +6,7 @@ import Login from './components/authentication/Login';
 import ListRequestFriends from './components/dashboard/Friends/ListRequestFriends';
 import Dashboard from './components/dashboard/Dashboard';
 import Home from './components/Home/Home';
-
+import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 
 import { Switch, Route } from 'react-router-dom';

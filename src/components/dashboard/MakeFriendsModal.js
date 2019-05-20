@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Nav, Button, Modal } from 'react-bootstrap';
-import { getListOfPossibleFriends, getStatsUserRequest, getAccountLoginById} from '../functions/userFunctions';
-import { addFriend } from '../functions/friendsFunctions'
+import { getAccountLoginById } from '../functions/loginAccountFunctions';
+import { addFriend, getListOfPossibleFriends } from '../functions/friendsFunctions'
 
 class MakeFriendsModal extends Component {
     constructor(props) {
@@ -31,7 +31,8 @@ class MakeFriendsModal extends Component {
     handleAdd = (user_id) => {
         let accounts = {
             account_to: user_id,
-            account_login_id: this.state.account_login_id
+            account_login_id: this.state.account_login_id,
+            action_id: this.state.account_login_id
         }
         addFriend(accounts).then( res => {
 
@@ -39,11 +40,13 @@ class MakeFriendsModal extends Component {
   
                 let accountsBidirectional = {
                     account_to: this.state.user_id,
-                    account_login_id: last_res[0].Id
+                    account_login_id: last_res[0].Id,
+                    action_id: this.state.account_login_id
                 }
 
                 addFriend(accountsBidirectional).then(res => {
-                    console.log(res);
+                    alert('Success');
+                    window.location.reload();
                 })
             })
         

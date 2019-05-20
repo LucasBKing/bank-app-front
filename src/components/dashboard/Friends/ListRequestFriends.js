@@ -1,15 +1,16 @@
 import React, { Component, Fragment } from 'react';
-import { getFriendsRequests, getStatsUserRequest, updateRequestFriend, getAccountLoginById } from '../../functions/userFunctions';
-import { Container, Row, Col, FormControl, Button, InputGroup, Table, ListGroup} from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { getStatsUserRequest } from '../../functions/userFunctions';
+import { getFriendsRequests, updateRequestFriend } from '../../functions/friendsFunctions';
+import { Container, Row, Col, Button, Table, Navbar, Nav} from 'react-bootstrap';
+import '../../../assets/css/FriendRequest.css'
 
 class ListRequestFriends extends Component {
     constructor(props) {
         super(props);
-
+        console.log(props)
         this.state = {
             user_id: this.props.location.state.user_id,
-            account_login_id: this.props.location.state.account_login_id,
+            account_login_id: this.props.location.state.login_id,
             list_of_requests: []
         }
     }
@@ -21,11 +22,20 @@ class ListRequestFriends extends Component {
         }
         getFriendsRequests(account).then(res => {
             if(res.length > 0) {
-                res.map(user => {
-                    getStatsUserRequest(user.account_login_id).then(res => {
+                res.map(users_login => {
+
+                    getStatsUserRequest(users_login.account_login_id).then(res => {
                         res.map(user => {
+                            
+                            let newUser = {
+                                Id: user.user_id,
+                                account_login_id: user.Id,
+                                first_name: user.first_name,
+                                last_name: user.last_name,
+                                email: user.email                               
+                            }
                             this.setState({
-                                list_of_requests: [...this.state.list_of_requests, user]
+                                list_of_requests: [...this.state.list_of_requests, newUser]
                             })
                         })
                     })
@@ -34,49 +44,65 @@ class ListRequestFriends extends Component {
         })
     }
 
-    handleAccept = (user_id, account_login_id, status) => {
-        let account = {
-            user_id: this.state.user_id,
-            account_login_id: account_login_id,
-            status: status
+    handleAccept = (user, status) => {
+        let first_row = {
+            account_login_id: this.state.account_login_id,
+            account_to: user.Id,
+            status: status,
+            action_id: this.state.account_login_id
         }
-        updateRequestFriend(account).then(res => {
-            getAccountLoginById(this.state.user_id).then(account_login => {
-               
-                let account_bidirectional  = {
-                    user_id: user_id,
-                    account_login_id: account_login[0].Id,
-                    status: status
-                }
-                
-                updateRequestFriend(account_bidirectional).then(res => {
-                    console.log(res);
-                    window.location.reload();
-                })
+        
+        let second_row = {
+            account_login_id: user.account_login_id,
+            account_to: this.state.user_id,
+            status: status,
+            action_id: this.state.account_login_id
+        }
+        
+        updateRequestFriend(first_row).then( res => {
+            updateRequestFriend(second_row).then( res2 => {
+                window.location.reload();
             })
-            
         })
     }
+
+    handleLogout = (event) => {
+        event.preventDefault();
+        localStorage.removeItem('usertoken');
+        this.props.history.push('/');
+    }
+
 
     render() {
         let { list_of_requests } = this.state;
    
         return(
             <Fragment>
-                <h1>RequestFriendList</h1>
+                <Navbar variant="dark" style={{ marginBottom: '20px' }} className="custom-navbar">
+                    <Nav>
+                        <Navbar.Brand style={{ fontWeight: 'bold', fontSize: '30px'}} href="/dashboard">Ekki</Navbar.Brand>
+                    </Nav>
+                    <Nav className="ml-auto">
+                        <Button className="custom-button-navbar" onClick={this.handleLogout}>
+                            Logout
+                        </Button>
+                    </Nav>
+                </Navbar>
+                <h1>Who wants to be your friend?</h1>
                 <Container>
                     <Row>
                         <Col>
                         
                         { list_of_requests
                             ?
-                            <Table responsive>
+                            <Table className="custom-table" responsive>
                                 <thead>
-                                    <tr>
+                                    <tr >
                                         <th>#</th>
                                         <th>First name</th>
                                         <th>Last name</th>
                                         <th>Email</th>
+                                        <th></th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -89,8 +115,11 @@ class ListRequestFriends extends Component {
                                                         <td>{user.last_name}</td>
                                                         <td>{user.email}</td>
                                                         <td>
-                                                            <Button variant="outline-primary" onClick={() => this.handleAccept(user.user_id, user.Id, 'Aceito')}>
-                                                                Aceitar
+                                                            <Button variant="outline-primary" onClick={() => this.handleAccept(user, 'Aceito')}>
+                                                                Accept
+                                                            </Button>
+                                                            <Button variant="outline-primary" onClick={() => this.handleAccept(user, 'Recusado')}>
+                                                                Refuse
                                                             </Button>
                                                         </td>
                                                     </tr>

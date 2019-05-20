@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Col, Button, Modal } from 'react-bootstrap';
-import { loginAccount } from '../functions/userFunctions';
+import { loginAccount } from '../functions/loginAccountFunctions';
 import { withRouter } from 'react-router-dom';
 
 class Login extends Component {
@@ -61,10 +61,10 @@ class Login extends Component {
                                     <Form.Label>Password</Form.Label>
                                     <Form.Control type="password" placeholder="Password" onChange={this.handleChange} />
                                 </Form.Group>
-                                <Button type="submit">
-                                    Send
-                                </Button>
                             </Form.Row>
+                            <Button type="submit">
+                                Send
+                            </Button>
                         </Form>
                     </Modal.Body>
                     <Modal.Footer>
